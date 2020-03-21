@@ -1,0 +1,12 @@
+<div class="row">
+    <div class="col-sm-6 mt-5">
+        <a class="btn btn-outline-primary btn-block" href="https://twitter.com/share?url={{ request.scheme }}://{{ request.get_host }}{% url 'blog:detail' post.pk %}&text={{ post.title }} - Abuma" target="_blank" rel="nofollow">
+            Twitterでシェア
+        </a>
+    </div>
+    <div class="col-sm-6 mt-5">
+        <a class="btn btn-outline-primary btn-block" href="https://www.facebook.com/sharer/sharer.php?u={{ request.scheme }}://{{ request.get_host }}{% url 'blog:detail' post.pk %}" target="_blank" rel="nofollow">
+            FaceBookでシェア
+        </a>
+    </div>
+</div>

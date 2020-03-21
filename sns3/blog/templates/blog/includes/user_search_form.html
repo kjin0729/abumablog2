@@ -1,0 +1,8 @@
+<div class="form-group">
+    <form action="{% url 'blog:user_search' %}" method="GET">
+        <div class="field mt-3">
+            {{ user_search_form.user_key_word }}
+            <button type="submit" id="user_search" class="btn btn-inline btn-outline-success btn-lg mt-3 float-right">検索</button>
+        </div>
+    </form>
+  </div>

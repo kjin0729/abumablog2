@@ -1,0 +1,71 @@
+{% extends "blog/base.html" %}
+{% load blog %}
+{% block content %}
+<section id="post-detail" class="container">
+    <nav class="back"><a href="{% get_return_link request %}">戻る</a></nav>
+
+        <div class="row">
+            <div class="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-sm-8 offset-sm-2">
+              <div class="card">
+                {% for post in post_list %}
+                <div class="card-header">
+                        <img class="card-img" id="user-thumbnail" src="{{ post.user.thumbnail.url }}">
+                            <span class="card-text">
+                              {% if post.user.get_full_name %}
+                              <span class="user-name">{{ post.user.get_full_name }}</span><br>
+                              {% endif %}
+                              <span class="user-email">{{ post.user.email }}</span>
+                            </span>
+                </div>
+                <article class="post">
+                    <div class="card-body">
+                        <a href="{% url 'blog:detail' post.pk %}">
+                        <h4 class="card-title" id="post-title">{{ post.title }}</h4>
+                        <img class="card-img" id="post-thumbnail" src="{{ post.thumbnail.url }}" alt="{{ post.title }}">
+                        <p class="meta">
+                            <time datetime="{{ post.created_at | date:'Y-m-d' }}">{{ post.created_at | date:'Y年n月j日' }}</time>
+                            -
+                            {{ post.category }}
+                        </p>
+                            <p class="card-text text-body">
+                                {{ post.text | truncatechars:50 }}
+                            </p>
+                        </a>
+                   </div>
+                </article>
+
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          {% if user.is_authenticated %}
+          <a class="btn btn-success btn-lg rounded-circle" id="post-create" href="{% url 'blog:post_create' user.pk %}"><i class="fas fa-plus"></i></a>
+          {% endif %}
+
+          <ul class="pagination">
+              {% if page_obj.has_previous %}
+                  <li class="page-item">
+                      <a class="page-link" href="?{% url_replace request 'page' page_obj.previous_page_number %}">
+                          <span area-hidden="true">&laquo;</span>
+                      </a>
+                  </li>
+              {% endif %}
+
+              {% for num in page_obj.paginator.page_range %}
+                  {% if page_obj.number == num %}
+                      <li class="page-item active"><a class="page-link" href="#!">{{ num }}</a></li>
+                  {% else %}
+                      <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' num %}">{{ num }}</a></li>
+                  {% endif %}
+              {% endfor %}
+
+              {% if page_obj.has_next %}
+                  <li class="page-item">
+                      <a class="page-link" href="?{% url_replace request 'page' page_obj.next_page_number %}">
+                          <span area-hidden="true">&raquo;</span>
+                      </a>
+                  </li>
+              {% endif %}
+          </ul>
+{% endblock %}

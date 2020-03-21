@@ -1,0 +1,155 @@
+{% extends "blog/base.html" %}
+{% load blog %}
+{% block meta_title %}{{ post.title }} - {{ block.super }}{% endblock %}
+{% block meta_description %}{% endblock %}
+
+{% block content %}
+    <nav class="back"><a href="{% get_return_link request %}">戻る</a></nav>
+    <section id="post-detail" class="container py-5">
+            <div class="row">
+               <div class="col-lg-2 d-none d-lg-block left">
+                   {% render_category_links_detail %}
+               </div>
+                <div class="col-lg-7 offset-lg-1">
+                  <div class="card post">
+                    <div class="card-header">
+                        <a href="{% url 'blog:user_post_public_detail' post.user.pk %}">
+                            <img class="card-img" id="user-thumbnail" src="{{ post.user.thumbnail.url }}">
+                                <span class="card-text">
+                                  {% if post.user.get_full_name %}
+                                  <span class="user-name">{{ post.user.get_full_name }}</span><br>{% endif %}
+                                  <span class="user-email">{{ post.user.email }}</span>
+                                </span>
+                        </a>
+                    </div>
+                            <div class="card-body">
+                              <h3 class="card-title mt-3">{{ post.title }}</h3>
+                                  <a href="{{ post.thumbnail.url }}" target="_blank">
+                                      <img class="card-img" id="post-detail-thumbnail" src="{{ post.thumbnail.url }}" alt="{{ post.title }}">
+                                  </a>
+                                  <p class="meta">
+                                      <time datetime="{{ post.created_at | date:'Y-m-d' }}">{{ post.created_at | date:'Y年n月j日' }}</time>
+                                      -
+                                      {{ post.category }}
+                                  </p>
+                                  <div class="card-text">
+                                      {{ post.text | linebreaks | urlize2 }}
+                                  </div>
+                              </div>
+                         <div class="card-footer">
+                           <div class="row">
+                            <p class="card-text col-6"><a href="{% url 'blog:comment_form' post.pk %}"><i class="far fa-comment-alt"></i></a>
+                               <span>{{ post.comment_set.count }}</span>
+                            </p>
+                            <p class="card-text col-6">
+                              {% if user in post.likes.all %}
+                              <a class="like-btn on" data-href="{{ post.get_api_like_url }}"
+                                 data-likes="{{ post.likes.count }}" href="{{ post.get_like_url }}">
+                                <i class="far fa-heart"></i>
+                                <span class="liked-cnt" id="heart">{{ post.likes.count }}</span>
+                              </a>
+                              {% else %}
+                              <a class="like-btn" data-href="{{ post.get_api_like_url }}"
+                                 data-likes="{{ post.likes.count }}" href="{{ post.get_like_url }}">
+                                <i class="far fa-heart"></i>
+                                <span class="liked-cnt" id="heart">{{ post.likes.count }}</span>
+                              </a>
+                              {% endif %}
+                            </p>
+                          </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-lg-2 d-none d-lg-block right">
+                      {% render_month_links_detail %}
+                  </div>
+
+                            {% for comment in post.comment_set.all %}
+                                <div class="col-lg-4 col-7 offset-lg-3 mt-3">
+                                    <div class="card comment">
+                                        <div class="card-header">
+                                          <a href="{% url 'blog:user_post_public_detail' comment.user.pk %}">
+                                              <img class="card-img" id="user-thumbnail" src="{{ comment.user.thumbnail.url }}">
+                                                  <span class="card-text">
+                                                    {% if comment.user.get_full_name %}
+                                                    <span class="user-name">{{ comment.user.get_full_name }}</span><br>{% endif %}
+                                                    <span class="user-email">{{ comment.user.email }}</span>
+                                                  </span>
+                                          </a>
+                                          </div>
+                                          <p class="meta">
+                                              <time datetime="{{ comment.created_at | date:'Y-m-d' }}">{{ comment.created_at | date:'Y年n月j日' }}</time>
+                                          </p>
+                                          <div class="card-text">
+                                              {{ comment.text | linebreaks | urlize2 }}
+                                          </div>
+                                          <p class="card-text"><a href="{% url 'blog:reply_form' comment.pk %}"><i class="fas fa-reply"></i></a>
+                                             <span>{{ comment.reply_set.count }}</span>
+                                          </p>
+                                        </div>
+                                    </div>
+                                {% for reply in comment.reply_set.all %}
+                                <div class="col-lg-4 offset-lg-6 col-7 offset-4 mt-3">
+                                  <div class="card reply">
+                                    <div class="card-header">
+                                      <a href="{% url 'blog:user_post_public_detail' reply.user.pk %}">
+                                          <img class="card-img" id="user-thumbnail" src="{{ reply.user.thumbnail.url }}">
+                                              <span class="card-text">
+                                                {% if reply.user.get_full_name %}
+                                                <span class="user-name">{{ reply.user.get_full_name }}</span><br>{% endif %}
+                                                <span class="user-email">{{ reply.user.email }}</span>
+                                              </span>
+                                      </a>
+                                      </div>
+                                      <p class="meta">
+                                          <time datetime="{{ reply.created_at | date:'Y-m-d' }}">{{ reply.created_at | date:'Y年n月j日' }}</time>
+                                      </p>
+                                      <div class="card-text text-body">
+                                          {{ reply.text | linebreaks | urlize2 }}
+                                      </div>
+                                    </div>
+                                  </div>
+                                {% endfor %}
+                            {% endfor %}
+            </div>
+    </section>
+
+    {% if user.is_authenticated %}
+    <a class="btn btn-success btn-lg rounded-circle" id="post-create" href="{% url 'blog:post_create' user.pk %}"><i class="fas fa-plus"></i></a>
+    {% endif %}
+
+    {% include 'blog/includes/sns_button_for_detail.html' %}
+{% endblock %}
+
+{% block jquery %}
+<script>
+
+$(".like-btn").on('click', function(e){
+  e.preventDefault();
+  const this_ = $(this);
+  const likeUrl = this_.attr("data-href");
+  const like_cnt = $(".liked-cnt");
+  if (likeUrl){
+    $.ajax({
+      url: likeUrl,
+      method: "GET",
+      data: {},
+      success: function(data){
+        let change_like = like_cnt.text();
+        if (data.liked){
+          like_cnt.text(++change_like);
+          this_.addClass("on");
+        } else {
+          like_cnt.text(--change_like);
+          this_.removeClass("on");
+        }
+
+      }, error: function(error){
+        console.log("error")
+      }
+    });
+  }
+});
+
+</script>
+{% endblock %}

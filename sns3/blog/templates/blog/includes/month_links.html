@@ -1,0 +1,18 @@
+<div class="dropdown mt-5">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+   data-toggle="dropdown" aria-haspopup="true" aria-expanded=false>年月別一覧</button>
+   <div class="dropdown-menu" id="month-links" aria-labelledby="dropdownMenuButton">
+{% regroup dates by year as dates_by_year %}
+    <ul>
+        {% for month in dates_by_year %}
+            <li><a class="dropdown-item" href="{% url 'blog:year' month.grouper %}">{{ month.grouper }}年</a>
+                <ul>
+                    {% for d in month.list %}
+                        <li><a class="dropdown-item" href="{% url 'blog:month' month.grouper d.month %}">{{ d|date:'F' }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+</div>

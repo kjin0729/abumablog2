@@ -1,0 +1,9 @@
+<div class="dropdown mt-5">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+   data-toggle="dropdown" aria-haspopup="true" aria-expanded=false>カテゴリー別一覧</button>
+     <div class="dropdown-menu" id="category-links" aria-labelledby="dropdownMenuButton">
+    {% for category in category_list %}
+        <a class="dropdown-item" href="{% url 'blog:category' category.pk %}">{{ category }}</a>
+    {% endfor %}
+     </div>
+</div>

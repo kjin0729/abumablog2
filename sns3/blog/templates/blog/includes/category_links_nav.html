@@ -1,0 +1,11 @@
+<li class="nav-item dropdown d-lg-none">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+      id="dropdownMenuButton" role="button" aria-haspopup="true" aria-expanded="false">
+       カテゴリー別一覧
+    </a>
+    <div class="dropdown-menu" id="category-links-nav" aria-labelledby="dropdownMenuButton">
+      {% for category in category_list %}
+        <a class="dropdown-item" href="{% url 'blog:category' category.pk %}">{{ category }}</a>
+      {% endfor %}
+    </div>
+</li>

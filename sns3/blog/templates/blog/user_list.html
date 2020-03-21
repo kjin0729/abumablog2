@@ -1,0 +1,28 @@
+{% extends "blog/base.html" %}
+{% load blog %}
+{% block meta_title %}{{ heading }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+        <h3 class="search-title">{{ heading }}</h3>
+
+            <div class="row">
+            {% for user in user_list %}
+            <div class="card col-md-8 offset-md-2 mt-3">
+                <a class="user-detail" href="{% url 'blog:user_post_public_detail' user.pk %}">
+                    <div class="card-body">
+                        <img class="card-img" id="user-thumbnail" src="{{ user.thumbnail.url }}">
+                            <span class="card-text">{% if user.get_full_name %}
+                            <span class="user-name">{{ user.get_full_name }}<br>{% endif %}</span>
+                            <span class="user-email">{{ user.email }}<span>
+                            </span>
+                    </div>
+                </a>
+            </div>
+
+        {% empty %}
+            <p>ユーザーが見つかりませんでした。</p>
+        {% endfor %}
+         </div>
+
+
+{% endblock %}

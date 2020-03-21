@@ -1,0 +1,12 @@
+<div class="row">
+    <div class="col-sm-6 mt-5">
+        <a class="btn btn-outline-primary btn-block" href="https://twitter.com/share?url={{ request.scheme }}://{{ request.get_host }}{% url 'blog:list' %}&text=最近の記事 - Abuma" target="_blank" rel="nofollow">
+          Twitterでシェア
+        </a>
+    </div>
+    <div class="col-sm-6 mt-5">
+        <a class="btn btn-outline-primary btn-block" href="https://www.facebook.com/sharer/sharer.php?u={{ request.scheme }}://{{ request.get_host }}{% url 'blog:list' %}" target="_blank" rel="nofollow">
+            FaceBookでシェア
+        </a>
+    </div>
+</div>
