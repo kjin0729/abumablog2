@@ -17,14 +17,16 @@
                       <div class="card" id="post-card">
                         <div class="card-header">
                           <a class="user-detail" href="{% url 'blog:user_post_public_detail' post.user.pk %}">
-                              <img class="card-img" id="user-thumbnail" src="{{ post.user.thumbnail.url }}">
-                                  <span class="card-text">
-                                    {% if post.user.get_full_name %}
-                                    <span class="user-name">{{ post.user.get_full_name }}</span>
-                                     {% else %}
-                                    <span class="user-name">{{ post.user.email }}</span>
-                                    {% endif %}
-                                  </span>
+                              {% if post.user.thumbnail != '' %}
+                                <img class="card-img" id="user-thumbnail" src="{{ post.user.thumbnail.url }}">
+                              {% endif %}
+                              <span class="card-text">
+                                {% if post.user.get_full_name %}
+                                <span class="user-name">{{ post.user.get_full_name }}</span>
+                                 {% else %}
+                                <span class="user-name">{{ post.user.email }}</span>
+                                {% endif %}
+                              </span>
                           </a>
                         </div>
                         <div class="card-body">

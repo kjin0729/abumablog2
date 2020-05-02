@@ -8,6 +8,8 @@ from django.contrib.auth.forms import (
 from django.contrib.auth import get_user_model
 from django.core.files.storage import default_storage
 from .widgets import FileUploadableTextArea
+from django.utils.translation import ugettext_lazy as _
+import inspect
 
 
 User = get_user_model()
@@ -26,7 +28,7 @@ class UserSearchForm(forms.Form):
     user_key_word = forms.CharField(
         label='検索キーワード',
         required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ユーザー検索(名前で検索してください)'}),
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ユーザー検索(姓か名で検索してください)'}),
     )
 
 class PostForm(forms.ModelForm):
@@ -136,7 +138,7 @@ class MyPasswordChangeForm(PasswordChangeForm):
 class MyPasswordResetForm(PasswordResetForm):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
 

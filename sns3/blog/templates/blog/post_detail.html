@@ -14,7 +14,9 @@
                   <div class="card post">
                     <div class="card-header">
                         <a href="{% url 'blog:user_post_public_detail' post.user.pk %}">
+                            {% if post.user.thumbnail != '' %}
                             <img class="card-img" id="user-thumbnail" src="{{ post.user.thumbnail.url }}">
+                            {% endif %}
                                 <span class="card-text">
                                   {% if post.user.get_full_name %}
                                   <span class="user-name">{{ post.user.get_full_name }}</span><br>{% endif %}
@@ -69,7 +71,9 @@
                                     <div class="card comment">
                                         <div class="card-header">
                                           <a href="{% url 'blog:user_post_public_detail' comment.user.pk %}">
+                                              {% if comment.user.thumbnail != '' %}
                                               <img class="card-img" id="user-thumbnail" src="{{ comment.user.thumbnail.url }}">
+                                              {% endif %}
                                                   <span class="card-text">
                                                     {% if comment.user.get_full_name %}
                                                     <span class="user-name">{{ comment.user.get_full_name }}</span><br>{% endif %}
@@ -93,7 +97,9 @@
                                   <div class="card reply">
                                     <div class="card-header">
                                       <a href="{% url 'blog:user_post_public_detail' reply.user.pk %}">
+                                          {% if reply.user.thumbnail != '' %}
                                           <img class="card-img" id="user-thumbnail" src="{{ reply.user.thumbnail.url }}">
+                                          {% endif %}
                                               <span class="card-text">
                                                 {% if reply.user.get_full_name %}
                                                 <span class="user-name">{{ reply.user.get_full_name }}</span><br>{% endif %}

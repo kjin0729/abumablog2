@@ -84,7 +84,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-
 class Category(models.Model):
 
     name = models.CharField('タイトル', max_length=255)

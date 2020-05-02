@@ -1,5 +1,5 @@
 下記のURLよりサイトにアクセスすると、メールアドレスの変更が完了します。
-
+※ログイン画面が表示された際には、以前のメールアドレスをご入力ください。
 {{ protocol }}://{{ domain }}{% url 'blog:email_change_complete' token %}
 
 Abuma

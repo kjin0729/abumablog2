@@ -9,7 +9,9 @@
               <div class="card">
                 {% for post in post_list %}
                 <div class="card-header">
+                      {% if post.user.thumbnail != '' %}
                         <img class="card-img" id="user-thumbnail" src="{{ post.user.thumbnail.url }}">
+                      {% endif %}
                             <span class="card-text">
                               {% if post.user.get_full_name %}
                               <span class="user-name">{{ post.user.get_full_name }}</span><br>

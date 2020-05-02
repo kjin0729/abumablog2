@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.conf import settings
+from django.core.mail import send_mail
 from django.core.signing import BadSignature, SignatureExpired, loads, dumps
 from .forms import (
 PostSearchForm, CommentCreateForm, ReplyCreateForm,
@@ -225,7 +226,7 @@ class UserCreateDone(generic.TemplateView):
 
 
 class UserCreateComplete(generic.TemplateView):
-    template_name = 'blog/user_create_complate.html'
+    template_name = 'blog/user_create_complete.html'
     timeout_seconds = getattr(settings, 'ACTIVATION_TIMEOUT_SECONDS', 60*60*24)
 
     def get(self, request, **kwargs):
@@ -246,7 +247,7 @@ class UserCreateComplete(generic.TemplateView):
                 return HttpResponseBadRequest()
             else:
                 if not user.is_active:
-                    user_active = True
+                    user.is_active = True
                     user.save()
                     return super().get(request, **kwargs)
 
@@ -402,6 +403,8 @@ class PasswordReset(PasswordResetView):
     subject_template_name = 'blog/mail/password_reset_subject.txt'
     email_template_name = 'blog/mail/password_reset_message.txt'
     template_name = 'blog/password_reset_form.html'
+    form_class = MyPasswordResetForm
+    success_url = reverse_lazy('blog:password_reset_done')
 
 
 class PasswordResetDone(PasswordResetDoneView):
@@ -431,10 +434,11 @@ class EmailChange(LoginRequiredMixin, generic.FormView):
         context = {
             'protocol': 'https' if self.request.is_secure() else 'http',
             'domain': domain,
-            'token': dump(new_email),
+            'token': dumps(new_email),
             'user': user,
         }
 
+        #from_email = settings.DEFAULT_FROM_EMAIL
         subject = render_to_string('blog/mail/email_change_subject.txt', context)
         message = render_to_string('blog/mail/email_change_message.txt', context)
         send_mail(subject, message, None, [new_email])
@@ -462,7 +466,7 @@ class EmailChangeComplete(LoginRequiredMixin, generic.TemplateView):
             return HttpResponseBadRequest()
 
         else:
-            User.objects.filter(email=email, is_active=False).delete()
+            User.objects.filter(email=new_email, is_active=False).delete()
             request.user.email = new_email
             request.user.save()
             return super().get(request, **kwargs)

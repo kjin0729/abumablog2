@@ -9,7 +9,9 @@
               <div class="card">
                 <div class="card-header">
                     <a class="user-detail" href="{% url 'blog:user_detail' user.pk %}">
+                        {% if user.thumbnail != '' %}
                         <img class="card-img" id="user-thumbnail" src="{{ user.thumbnail.url }}">
+                        {% endif %}
                             <span class="card-text">
                               {% if user.get_full_name %}
                               <span class="user-name">{{ user.get_full_name }}</span><br>

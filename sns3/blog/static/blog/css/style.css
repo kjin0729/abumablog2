@@ -35,6 +35,8 @@ time, .meta, .card-subtitle {
 
 .card-header {
   overflow: hidden;
+  white-space: nowrap;
+  height: 60px;
 }
 
 .card-text {
@@ -48,12 +50,14 @@ time, .meta, .card-subtitle {
 .user-email {
   color: #6F959E;
   font-size: 12px;
-  margin-left: 40px;
+  margin-left: 0.3em;
   white-space: nowrap;
 }
 
 .user-name {
   white-space: nowrap;
+  line-height: 30px;
+  margin-left: 0.3em;
 }
 
 .user-detail, .user-detail:hover {
@@ -88,7 +92,19 @@ time, .meta, .card-subtitle {
 
 @media (min-width: 768px) {
   #post-card {
-    height: 350px;
+    height: 400px;
+  }
+}
+
+@media (min-width: 992px) {
+  #post-card {
+    height: 400px;
+  }
+}
+
+@media (min-width: 1200px) {
+  #post-card {
+    height: 400px;
   }
 }
 
@@ -153,6 +169,7 @@ time, .meta, .card-subtitle {
   width: 35px;
   margin: 0;
   opacity: 1;
+  float: left;
 }
 
 #post-list-title {
